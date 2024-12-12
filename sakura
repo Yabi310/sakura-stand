@@ -619,6 +619,54 @@ antikickToggle:OnChanged(function()
 
 end)
 
+local Tabs = {
+    Main = Window:AddTab({ Title = "Settings", Icon = "" })
+}
+
+-- ฟังก์ชัน Anti AFK
+local VirtualUser = game:GetService('VirtualUser')
+local function antiAFK()
+    game:GetService('Players').LocalPlayer.Idled:Connect(function()
+        -- ส่งคำสั่งให้ VirtualUser คลิกที่หน้าจอเพื่อหลีกเลี่ยงการ AFK
+        VirtualUser:CaptureController()
+        VirtualUser:ClickButton2(Vector2.new())  -- คำสั่งคลิกปุ่มขวาของเมาส์
+    end)
+end
+
+-- เพิ่ม Toggle เพื่อเปิด-ปิด Anti AFK
+local antiAFKToggle = Tabs.Main:AddToggle("Anti AFK", {
+    Title = "Enable Anti AFK",
+    Default = false,
+    Callback = function(state)
+        if state then
+            -- เรียกใช้ฟังก์ชัน Anti AFK เมื่อเปิด
+            antiAFK()
+            Fluent:Notify({
+                Title = "Anti AFK",
+                Content = "Anti AFK is now enabled.",
+                Duration = 5
+            })
+        else
+            Fluent:Notify({
+                Title = "Anti AFK",
+                Content = "Anti AFK is now disabled.",
+                Duration = 5
+            })
+        end
+    end
+})
+
+-- แจ้งเตือนเมื่อ Anti AFK ถูกโหลด
+game:GetService("StarterGui"):SetCore("SendNotification", {
+    Title = "Anti AFK loaded!",
+    Text = "Made by Gio",
+    Button1 = "Thanks",
+    Duration = 5
+})
+
+-- เลือกแท็บที่ใช้งาน
+Window:SelectTab(1)
+
 local sellAllToggle = Tabs.Main:AddToggle("SellAllToggle", { Title = "Sell All", Default = false })
 local sellAllCoroutine
 
