@@ -1,3 +1,37 @@
+local VirtualUser = game:GetService('VirtualUser')
+local G_AntiAfk = true  -- ตั้งค่าให้เปิดใช้งาน Anti AFK
+
+-- ฟังก์ชันในการเปิดหรือปิด Anti AFK
+local function toggleAntiAFK()
+    if G_AntiAfk then
+        -- เปิดใช้งาน Anti AFK
+        game:GetService('Players').LocalPlayer.Idled:Connect(function()
+            VirtualUser:CaptureController()
+            VirtualUser:ClickButton2(Vector2.new())
+        end)
+        game:GetService("StarterGui"):SetCore("SendNotification", {
+            Title = "AntiAFK เปิดใช้งาน!",
+            Text = "Made by Gio",
+            Button1 = "ขอบคุณ",
+            Duration = 5
+        })
+    else
+        -- ปิดใช้งาน Anti AFK
+        game:GetService('Players').LocalPlayer.Idled:Disconnect()
+        game:GetService("StarterGui"):SetCore("SendNotification", {
+            Title = "AntiAFK ปิดใช้งาน",
+            Text = "Made by Gio",
+            Button1 = "ขอบคุณ",
+            Duration = 5
+        })
+    end
+end
+
+-- เปิดใช้งาน Anti AFK
+G_AntiAfk = true
+toggleAntiAFK()
+
+
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
