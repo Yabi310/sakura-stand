@@ -619,10 +619,6 @@ antikickToggle:OnChanged(function()
 
 end)
 
-local Tabs = {
-    Main = Window:AddTab({ Title = "Settings", Icon = "" })
-}
-
 -- ฟังก์ชัน Anti AFK
 local VirtualUser = game:GetService('VirtualUser')
 local function antiAFK()
