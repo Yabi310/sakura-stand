@@ -102,8 +102,6 @@ local autoSkillToggle = Tabs.Main:AddToggle("AutoSkillToggle", { Title = "Auto S
 
 local autoSkillCoroutine
 
-
-
 autoSkillToggle:OnChanged(function()
     _G.AutoSkill = autoSkillToggle.Value
     if _G.AutoSkill then
@@ -157,6 +155,16 @@ autoSkillToggle:OnChanged(function()
                         midknightRemote:WaitForChild("Cleaving"):FireServer()
                         midknightRemote:WaitForChild("Barrier"):FireServer()
                         midknightRemote:WaitForChild("Punch"):FireServer()
+
+                        -- Add new STWRemote skills
+                        local stwRemote = game:GetService("ReplicatedStorage"):WaitForChild("STWRemote")
+                        stwRemote:WaitForChild("Eye"):FireServer()
+                        stwRemote:WaitForChild("Knife"):FireServer()
+                        stwRemote:WaitForChild("TS"):FireServer()
+                        stwRemote:WaitForChild("Donut"):FireServer()
+                        stwRemote:WaitForChild("Punch"):FireServer()
+                        stwRemote:WaitForChild("Kick"):FireServer()
+                        stwRemote:WaitForChild("BloodSuck"):FireServer()
                     end
                 end)
             end
@@ -171,6 +179,7 @@ autoSkillToggle:OnChanged(function()
         })
     end
 end)
+
 
 
 
