@@ -76,7 +76,7 @@ autoFameToggle:OnChanged(function()
                                 repeat
                                     task.wait()
                                     game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
-                                        v.HumanoidRootPart.CFrame * CFrame.new(0, 0, -1)
+                                        v.HumanoidRootPart.CFrame * CFrame.new(0, 0, -6)
                                 until not _G.AutoFame or v.Humanoid.Health <= 0
                             end
                         end
@@ -580,7 +580,7 @@ FixBugBoxToggle:OnChanged(function()
 
                 -- รอระยะเวลาใหม่ก่อนที่จะทำการคลิกขวาครั้งถัดไป
 
-                task.wait(1)  -- ปรับระยะเวลาตามต้องการ
+                task.wait(0.2)  -- ปรับระยะเวลาตามต้องการ
 
             end
 
