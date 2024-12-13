@@ -242,7 +242,7 @@ autoDullahanToggle:OnChanged(function()
 
                                     game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
 
-                                        v.HumanoidRootPart.CFrame * CFrame.new(0, 0, 3)
+                                        v.HumanoidRootPart.CFrame * CFrame.new(0, 1, 7)
 
                                 until not _G.AutoDullahan or v.Humanoid.Health <= 0
 
@@ -280,6 +280,74 @@ autoDullahanToggle:OnChanged(function()
 
     end
 
+end)
+
+local autoSpawnDullahanToggle = Tabs.Main:AddToggle("AutoSpawnDullahan", { Title = "Auto Spawn Dullahan", Default = false })
+
+local autoSpawnDullahanCoroutine
+
+autoSpawnDullahanToggle:OnChanged(function()
+    _G.AutoSpawnDullahan = autoSpawnDullahanToggle.Value
+    if _G.AutoSpawnDullahan then
+        Fluent:Notify({
+            Title = "Auto Spawn Dullahan",
+            Content = "Auto Spawn Dullahan started.",
+            Duration = 5
+        })
+
+        autoSpawnDullahanCoroutine = coroutine.create(function()
+            local player = game:GetService("Players").LocalPlayer
+            local miscFolder = player:WaitForChild("Data"):WaitForChild("MiscFolder")
+            local candy = miscFolder:FindFirstChild("Candy")
+
+            local function setupProximityPrompt(itemsFolder)
+                local item = itemsFolder:FindFirstChildOfClass("ProximityPrompt")
+                
+                if item and item:IsA("ProximityPrompt") then
+                    item.KeyboardKeyCode = Enum.KeyCode.Unknown
+                    item.RequiresLineOfSight = false
+                    item.MaxActivationDistance = 10
+                    item.HoldDuration = 0
+
+                    -- ฟังก์ชันเมื่อมีผู้เล่นใช้งาน ProximityPrompt
+                    item.Triggered:Connect(function(player)
+                        print(player.Name .. " ได้ใช้งาน ProximityPrompt ของ " .. item.Parent.Name)
+                    end)
+                end
+            end
+
+            if candy and candy.Value >= 670 then
+                -- วาร์ปไปตำแหน่งที่กำหนด
+                local character = player.Character or player.CharacterAdded:Wait()
+                if character:FindFirstChild("HumanoidRootPart") then
+                    character.HumanoidRootPart.CFrame = CFrame.new(Vector3.new(-703, -32, 1189))
+                end
+
+                local itemsFolder = workspace.Map.NPCs["Auddy?"]  -- อ้างอิงไปยัง NPC "Auddy?"
+                setupProximityPrompt(itemsFolder)  -- เรียกใช้ฟังก์ชัน setupProximityPrompt
+
+                task.wait(30)
+
+                -- วาร์ปไปตำแหน่งที่มีการหมุน (rotation)
+                if character:FindFirstChild("HumanoidRootPart") then
+                    character.HumanoidRootPart.CFrame = CFrame.new(
+                        -1214.19116, 202.290741, -11291.3242, 0.999844968, -0, -0.0176090114, 0, 1, -0, 0.0176090114, 0, 0.999844968
+                    )
+                    wait(5)
+                    
+                    local itemsFolder = workspace.Map.Dullahan.BossEntrance  -- อ้างอิงไปยัง NPC "BossEntrance" ใน Dullahan
+                    setupProximityPrompt(itemsFolder)  -- เรียกใช้ฟังก์ชัน setupProximityPrompt
+                end
+            end
+        end)
+        coroutine.resume(autoSpawnDullahanCoroutine)
+    else
+        Fluent:Notify({
+            Title = "Auto Spawn Dullahan",
+            Content = "Auto Spawn Dullahan stopped.",
+            Duration = 5
+        })
+    end
 end)
 
 
@@ -360,7 +428,27 @@ autoBoxToggle:OnChanged(function()
 
                                     end
 
-                                    task.wait(2)  -- เวลาหน่วงระหว่างการทำงาน
+										
+
+                -- จำลองการกดปุ่มขวาของเมาส์ (Button2Down)
+
+                game:GetService("VirtualUser"):Button2Down(Vector2.new(1280, 672))
+
+                
+
+                -- รอเวลาเล็กน้อยก่อนปล่อยการคลิกขวา
+					wait(0.5)
+                  -- ปรับค่าหน่วงเวลาตามต้องการ
+
+                
+
+                -- จำลองการปล่อยการคลิกขวา (Button2Up)
+				wait(0.5)
+                game:GetService("VirtualUser"):Button2Up(Vector2.new(1280, 672))
+
+
+
+                                    task.wait(1)  -- เวลาหน่วงระหว่างการทำงาน
 
                                 end
 
@@ -567,8 +655,8 @@ FixBugBoxToggle:OnChanged(function()
                 
 
                 -- รอเวลาเล็กน้อยก่อนปล่อยการคลิกขวา
-
-                task.wait(0.5)  -- ปรับค่าหน่วงเวลาตามต้องการ
+					wait(0.3)
+                  -- ปรับค่าหน่วงเวลาตามต้องการ
 
                 
 
@@ -579,8 +667,8 @@ FixBugBoxToggle:OnChanged(function()
                 
 
                 -- รอระยะเวลาใหม่ก่อนที่จะทำการคลิกขวาครั้งถัดไป
-
-                task.wait(0.2)  -- ปรับระยะเวลาตามต้องการ
+					wait(0.3)
+                  -- ปรับระยะเวลาตามต้องการ
 
             end
 
