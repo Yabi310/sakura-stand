@@ -76,7 +76,7 @@ autoFameToggle:OnChanged(function()
                                 repeat
                                     task.wait()
                                     game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
-                                        v.HumanoidRootPart.CFrame * CFrame.new(0, 0, -6)
+                                        v.HumanoidRootPart.CFrame * CFrame.new(0, 0, 4)
                                 until not _G.AutoFame or v.Humanoid.Health <= 0
                             end
                         end
