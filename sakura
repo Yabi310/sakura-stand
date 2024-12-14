@@ -96,8 +96,6 @@ autoFameToggle:OnChanged(function()
 end)
 
 
--- AUTO SKILL FUNCTIONALITY
-
 local autoSkillToggle = Tabs.Main:AddToggle("AutoSkillToggle", { Title = "Auto Skill", Default = false })
 
 local autoSkillCoroutine
@@ -120,51 +118,58 @@ autoSkillToggle:OnChanged(function()
                         return
                     end
 
+                    local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
                     local humanoidRange = 20 -- ระยะห่างสูงสุดที่ถือว่าใกล้
-                    local closeTargetFound = false
+                    local closeTarget = nil
 
                     -- ตรวจสอบเป้าหมายใกล้เคียง
                     for _, obj in pairs(workspace.Living:GetDescendants()) do
                         if obj:FindFirstChild("Humanoid") and obj:FindFirstChild("HumanoidRootPart") and obj ~= character then
-                            local distance = (character.HumanoidRootPart.Position - obj.HumanoidRootPart.Position).Magnitude
+                            local targetRootPart = obj:FindFirstChild("HumanoidRootPart")
+                            local distance = (humanoidRootPart.Position - targetRootPart.Position).Magnitude
                             if distance <= humanoidRange then
-                                closeTargetFound = true
+                                closeTarget = obj
                                 break
                             end
                         end
                     end
 
                     -- ใช้สกิลหากพบเป้าหมายใกล้เคียง
-                    if closeTargetFound then
-                        local itadoriRemote = game:GetService("ReplicatedStorage"):WaitForChild("ItadoriRemote")
-                        itadoriRemote:WaitForChild("Punch"):FireServer()
-                        itadoriRemote:WaitForChild("Barrage"):FireServer()
-                        itadoriRemote:WaitForChild("Divergent"):FireServer()
-                        itadoriRemote:WaitForChild("BlackFlash"):FireServer()
-                        itadoriRemote:WaitForChild("Slam"):FireServer()
-                        itadoriRemote:WaitForChild("Sense"):FireServer()
-                        itadoriRemote:WaitForChild("Enhance"):FireServer()
+                    if closeTarget then
+                        local targetPosition = closeTarget.HumanoidRootPart.Position
 
-                        game:GetService("ReplicatedStorage"):WaitForChild("SkillRemote"):WaitForChild("YutaRemote"):WaitForChild("Domain"):FireServer()
+                        -- ตรวจสอบระยะและปรับตำแหน่ง
+                        if (humanoidRootPart.Position - targetPosition).Magnitude <= humanoidRange then
+                            local itadoriRemote = game:GetService("ReplicatedStorage"):WaitForChild("ItadoriRemote")
+                            itadoriRemote:WaitForChild("Punch"):FireServer()
+                            itadoriRemote:WaitForChild("Barrage"):FireServer()
+                            itadoriRemote:WaitForChild("Divergent"):FireServer()
+                            itadoriRemote:WaitForChild("BlackFlash"):FireServer()
+                            itadoriRemote:WaitForChild("Slam"):FireServer()
+                            itadoriRemote:WaitForChild("Sense"):FireServer()
+                            itadoriRemote:WaitForChild("Enhance"):FireServer()
 
-                        local args = { [1] = false }
-                        local midknightRemote = game:GetService("ReplicatedStorage"):WaitForChild("MidknightRemote")
-                        midknightRemote:WaitForChild("Dawn"):FireServer(unpack(args))
-                        midknightRemote:WaitForChild("Beam"):FireServer()
-                        midknightRemote:WaitForChild("Ash"):FireServer()
-                        midknightRemote:WaitForChild("Cleaving"):FireServer()
-                        midknightRemote:WaitForChild("Barrier"):FireServer()
-                        midknightRemote:WaitForChild("Punch"):FireServer()
+                            game:GetService("ReplicatedStorage"):WaitForChild("SkillRemote"):WaitForChild("YutaRemote"):WaitForChild("Domain"):FireServer()
 
-                        -- Add new STWRemote skills
-                        local stwRemote = game:GetService("ReplicatedStorage"):WaitForChild("STWRemote")
-                        stwRemote:WaitForChild("Eye"):FireServer()
-                        stwRemote:WaitForChild("Knife"):FireServer()
-                        stwRemote:WaitForChild("TS"):FireServer()
-                        stwRemote:WaitForChild("Donut"):FireServer()
-                        stwRemote:WaitForChild("Punch"):FireServer()
-                        stwRemote:WaitForChild("Kick"):FireServer()
-                        stwRemote:WaitForChild("BloodSuck"):FireServer()
+                            local args = { [1] = false }
+                            local midknightRemote = game:GetService("ReplicatedStorage"):WaitForChild("MidknightRemote")
+                            midknightRemote:WaitForChild("Dawn"):FireServer(unpack(args))
+                            midknightRemote:WaitForChild("Beam"):FireServer()
+                            midknightRemote:WaitForChild("Ash"):FireServer()
+                            midknightRemote:WaitForChild("Cleaving"):FireServer()
+                            midknightRemote:WaitForChild("Barrier"):FireServer()
+                            midknightRemote:WaitForChild("Punch"):FireServer()
+
+                            -- Add new STWRemote skills
+                            local stwRemote = game:GetService("ReplicatedStorage"):WaitForChild("STWRemote")
+                            stwRemote:WaitForChild("Eye"):FireServer()
+                            stwRemote:WaitForChild("Knife"):FireServer()
+                            stwRemote:WaitForChild("TS"):FireServer()
+                            stwRemote:WaitForChild("Donut"):FireServer()
+                            stwRemote:WaitForChild("Punch"):FireServer()
+                            stwRemote:WaitForChild("Kick"):FireServer()
+                            stwRemote:WaitForChild("BloodSuck"):FireServer()
+                        end
                     end
                 end)
             end
@@ -179,6 +184,7 @@ autoSkillToggle:OnChanged(function()
         })
     end
 end)
+
 
 
 
