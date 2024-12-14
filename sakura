@@ -96,8 +96,6 @@ autoFameToggle:OnChanged(function()
 end)
 
 
--- AUTO SKILL FUNCTIONALITY
-
 local autoSkillToggle = Tabs.Main:AddToggle("AutoSkillToggle", { Title = "Auto Skill", Default = false })
 
 local autoSkillCoroutine
@@ -120,51 +118,58 @@ autoSkillToggle:OnChanged(function()
                         return
                     end
 
+                    local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
                     local humanoidRange = 20 -- ระยะห่างสูงสุดที่ถือว่าใกล้
-                    local closeTargetFound = false
+                    local closeTarget = nil
 
                     -- ตรวจสอบเป้าหมายใกล้เคียง
                     for _, obj in pairs(workspace.Living:GetDescendants()) do
                         if obj:FindFirstChild("Humanoid") and obj:FindFirstChild("HumanoidRootPart") and obj ~= character then
-                            local distance = (character.HumanoidRootPart.Position - obj.HumanoidRootPart.Position).Magnitude
+                            local targetRootPart = obj:FindFirstChild("HumanoidRootPart")
+                            local distance = (humanoidRootPart.Position - targetRootPart.Position).Magnitude
                             if distance <= humanoidRange then
-                                closeTargetFound = true
+                                closeTarget = obj
                                 break
                             end
                         end
                     end
 
                     -- ใช้สกิลหากพบเป้าหมายใกล้เคียง
-                    if closeTargetFound then
-                        local itadoriRemote = game:GetService("ReplicatedStorage"):WaitForChild("ItadoriRemote")
-                        itadoriRemote:WaitForChild("Punch"):FireServer()
-                        itadoriRemote:WaitForChild("Barrage"):FireServer()
-                        itadoriRemote:WaitForChild("Divergent"):FireServer()
-                        itadoriRemote:WaitForChild("BlackFlash"):FireServer()
-                        itadoriRemote:WaitForChild("Slam"):FireServer()
-                        itadoriRemote:WaitForChild("Sense"):FireServer()
-                        itadoriRemote:WaitForChild("Enhance"):FireServer()
+                    if closeTarget then
+                        local targetPosition = closeTarget.HumanoidRootPart.Position
 
-                        game:GetService("ReplicatedStorage"):WaitForChild("SkillRemote"):WaitForChild("YutaRemote"):WaitForChild("Domain"):FireServer()
+                        -- ตรวจสอบระยะและปรับตำแหน่ง
+                        if (humanoidRootPart.Position - targetPosition).Magnitude <= humanoidRange then
+                            local itadoriRemote = game:GetService("ReplicatedStorage"):WaitForChild("ItadoriRemote")
+                            itadoriRemote:WaitForChild("Punch"):FireServer()
+                            itadoriRemote:WaitForChild("Barrage"):FireServer()
+                            itadoriRemote:WaitForChild("Divergent"):FireServer()
+                            itadoriRemote:WaitForChild("BlackFlash"):FireServer()
+                            itadoriRemote:WaitForChild("Slam"):FireServer()
+                            itadoriRemote:WaitForChild("Sense"):FireServer()
+                            itadoriRemote:WaitForChild("Enhance"):FireServer()
 
-                        local args = { [1] = false }
-                        local midknightRemote = game:GetService("ReplicatedStorage"):WaitForChild("MidknightRemote")
-                        midknightRemote:WaitForChild("Dawn"):FireServer(unpack(args))
-                        midknightRemote:WaitForChild("Beam"):FireServer()
-                        midknightRemote:WaitForChild("Ash"):FireServer()
-                        midknightRemote:WaitForChild("Cleaving"):FireServer()
-                        midknightRemote:WaitForChild("Barrier"):FireServer()
-                        midknightRemote:WaitForChild("Punch"):FireServer()
+                            game:GetService("ReplicatedStorage"):WaitForChild("SkillRemote"):WaitForChild("YutaRemote"):WaitForChild("Domain"):FireServer()
 
-                        -- Add new STWRemote skills
-                        local stwRemote = game:GetService("ReplicatedStorage"):WaitForChild("STWRemote")
-                        stwRemote:WaitForChild("Eye"):FireServer()
-                        stwRemote:WaitForChild("Knife"):FireServer()
-                        stwRemote:WaitForChild("TS"):FireServer()
-                        stwRemote:WaitForChild("Donut"):FireServer()
-                        stwRemote:WaitForChild("Punch"):FireServer()
-                        stwRemote:WaitForChild("Kick"):FireServer()
-                        stwRemote:WaitForChild("BloodSuck"):FireServer()
+                            local args = { [1] = false }
+                            local midknightRemote = game:GetService("ReplicatedStorage"):WaitForChild("MidknightRemote")
+                            midknightRemote:WaitForChild("Dawn"):FireServer(unpack(args))
+                            midknightRemote:WaitForChild("Beam"):FireServer()
+                            midknightRemote:WaitForChild("Ash"):FireServer()
+                            midknightRemote:WaitForChild("Cleaving"):FireServer()
+                            midknightRemote:WaitForChild("Barrier"):FireServer()
+                            midknightRemote:WaitForChild("Punch"):FireServer()
+
+                            -- Add new STWRemote skills
+                            local stwRemote = game:GetService("ReplicatedStorage"):WaitForChild("STWRemote")
+                            stwRemote:WaitForChild("Eye"):FireServer()
+                            stwRemote:WaitForChild("Knife"):FireServer()
+                            stwRemote:WaitForChild("TS"):FireServer()
+                            stwRemote:WaitForChild("Donut"):FireServer()
+                            stwRemote:WaitForChild("Punch"):FireServer()
+                            stwRemote:WaitForChild("Kick"):FireServer()
+                            stwRemote:WaitForChild("BloodSuck"):FireServer()
+                        end
                     end
                 end)
             end
@@ -179,6 +184,7 @@ autoSkillToggle:OnChanged(function()
         })
     end
 end)
+
 
 
 
@@ -242,7 +248,7 @@ autoDullahanToggle:OnChanged(function()
 
                                     game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
 
-                                        v.HumanoidRootPart.CFrame * CFrame.new(0, 0, 3)
+                                        v.HumanoidRootPart.CFrame * CFrame.new(0, 1, 7)
 
                                 until not _G.AutoDullahan or v.Humanoid.Health <= 0
 
@@ -281,6 +287,76 @@ autoDullahanToggle:OnChanged(function()
     end
 
 end)
+
+local autoSpawnDullahanToggle = Tabs.Main:AddToggle("AutoSpawnDullahan", { Title = "Auto Spawn Dullahan", Default = false })
+
+local autoSpawnDullahanCoroutine
+local isRunning = false
+
+autoSpawnDullahanToggle:OnChanged(function(state)
+    if state then
+        isRunning = true
+
+        autoSpawnDullahanCoroutine = coroutine.create(function()
+            local player = game:GetService("Players").LocalPlayer
+            local miscFolder = player:WaitForChild("Data"):WaitForChild("MiscFolder")
+            local candy = miscFolder:FindFirstChild("Candy")
+
+            local function setupProximityPrompt(itemsFolder)
+                local item = itemsFolder:FindFirstChildOfClass("ProximityPrompt")
+                if item and item:IsA("ProximityPrompt") then
+                    item.KeyboardKeyCode = Enum.KeyCode.Unknown
+                    item.RequiresLineOfSight = false
+                    item.MaxActivationDistance = 10
+                    item.HoldDuration = 0
+
+                    item.Triggered:Connect(function(triggeredPlayer)
+                        print(triggeredPlayer.Name .. " ได้ใช้งาน ProximityPrompt ของ " .. item.Parent.Name)
+                    end)
+                end
+            end
+
+            local function checkCandy()
+                if candy and candy.Value >= 670 then
+                    local character = player.Character or player.CharacterAdded:Wait()
+                    if character:FindFirstChild("HumanoidRootPart") then
+                        character.HumanoidRootPart.CFrame = CFrame.new(Vector3.new(-703, -32, 1189))
+                    end
+
+                    local itemsFolder = workspace.Map.NPCs["Auddy?"]
+                    setupProximityPrompt(itemsFolder)
+
+                    task.wait(30)
+
+                    if character:FindFirstChild("HumanoidRootPart") then
+                        character.HumanoidRootPart.CFrame = CFrame.new(
+                            -1214.19116, 202.290741, -11291.3242, 0.999844968, -0, -0.0176090114, 0, 1, -0, 0.0176090114, 0, 0.999844968
+                        )
+                        task.wait(5)
+
+                        local itemsFolder = workspace.Map.Dullahan.BossEntrance
+                        setupProximityPrompt(itemsFolder)
+                    end
+                end
+            end
+
+            while isRunning do
+                checkCandy()
+                task.wait(1)
+            end
+        end)
+
+        coroutine.resume(autoSpawnDullahanCoroutine)
+    else
+        isRunning = false
+        Fluent:Notify({
+            Title = "Auto Spawn Dullahan",
+            Content = "Auto Spawn Dullahan stopped.",
+            Duration = 5
+        })
+    end
+end)
+
 
 
 
@@ -360,7 +436,27 @@ autoBoxToggle:OnChanged(function()
 
                                     end
 
-                                    task.wait(2)  -- เวลาหน่วงระหว่างการทำงาน
+										
+
+                -- จำลองการกดปุ่มขวาของเมาส์ (Button2Down)
+
+                game:GetService("VirtualUser"):Button2Down(Vector2.new(1280, 672))
+
+                
+
+                -- รอเวลาเล็กน้อยก่อนปล่อยการคลิกขวา
+					task.wait(0.3)
+                  -- ปรับค่าหน่วงเวลาตามต้องการ
+
+                
+
+                -- จำลองการปล่อยการคลิกขวา (Button2Up)
+				task.wait(0.3)
+                game:GetService("VirtualUser"):Button2Up(Vector2.new(1280, 672))
+
+
+
+                                    task.wait(1)  -- เวลาหน่วงระหว่างการทำงาน
 
                                 end
 
@@ -567,8 +663,8 @@ FixBugBoxToggle:OnChanged(function()
                 
 
                 -- รอเวลาเล็กน้อยก่อนปล่อยการคลิกขวา
-
-                task.wait(0.5)  -- ปรับค่าหน่วงเวลาตามต้องการ
+					wait(0.3)
+                  -- ปรับค่าหน่วงเวลาตามต้องการ
 
                 
 
@@ -579,8 +675,8 @@ FixBugBoxToggle:OnChanged(function()
                 
 
                 -- รอระยะเวลาใหม่ก่อนที่จะทำการคลิกขวาครั้งถัดไป
-
-                task.wait(0.2)  -- ปรับระยะเวลาตามต้องการ
+					wait(0.3)
+                  -- ปรับระยะเวลาตามต้องการ
 
             end
 
